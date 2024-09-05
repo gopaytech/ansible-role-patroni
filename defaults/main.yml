@@ -45,7 +45,7 @@ patroni_log_loggers:
 
 # https://patroni.readthedocs.io/en/latest/SETTINGS.html#rest-api
 patroni_restapi_port: 8008
-patroni_restapi_connect_address: "{{ ansible_host }}:{{ patroni_restapi_port }}"
+patroni_restapi_connect_address: "{{ ansible_default_ipv4.address }}:{{ patroni_restapi_port }}"
 patroni_restapi_listen: "0.0.0.0:{{ patroni_restapi_port }}"
 patroni_restapi_username: ""
 patroni_restapi_password: ""
@@ -171,7 +171,7 @@ patroni_bootstrap_users:
 
 patroni_postgresql_use_unix_socket: true
 patroni_postgresql_listen: 0.0.0.0:5432
-patroni_postgresql_connect_address: "{{ ansible_host }}:5432"
+patroni_postgresql_connect_address: "{{ ansible_default_ipv4.address }}:5432"
 
 # https://patroni.readthedocs.io/en/latest/SETTINGS.html#postgresql
 patroni_postgresql_authentication:
