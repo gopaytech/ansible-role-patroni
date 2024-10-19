@@ -1,7 +1,7 @@
 ---
 
 __postgresql_apt_key_url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
-__postgresql_apt_repo: "deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main"
+__postgresql_apt_repo: "deb http://apt-archive.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main 11"
 __postgresql_apt_filename: "apt_postgresql_org_pub_repos_apt"
 
 
