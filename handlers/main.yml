@@ -15,9 +15,9 @@
     state: restarted
     enabled: yes
   retries: 5
-  delay: 5
+  delay: 10
   register: result
-  until: result.rc == 0
+  until: result.failed == false
 
 - name: restart patroni
   systemd:
