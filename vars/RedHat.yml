@@ -29,3 +29,6 @@ __patroni_system_packages:
 
 __patroni_haproxy_packages:
   - { name: "haproxy", state: "present" }
+
+# Patroni packages not available via yum, use pip fallback
+__patroni_apt_packages: []

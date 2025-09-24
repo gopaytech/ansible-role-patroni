@@ -19,6 +19,9 @@ patroni_pip_packages:
   - { name: "setuptools",                 state: "latest",  umask: "0022", executable: "pip3" }
   - { name: "patroni[{{ patroni_dcs }}]", state: "present", umask: "0022", executable: "pip3" }
 
+# Default to empty, will be populated from vars files
+patroni_apt_packages: "{{ __patroni_apt_packages | default([]) }}"
+
 patroni_replication_username: replicator
 patroni_replication_password: repuserpasswd
 patroni_superuser_username: postgres
