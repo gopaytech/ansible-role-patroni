@@ -23,13 +23,19 @@ __patroni_system_packages:
   - { name: "python3-pip",      state: "present" }
   - { name: "jq",              state: "present" }
 
-# Patroni packages available via apt (Ubuntu 24+)
+# Core patroni packages available via apt (Ubuntu 24+)
 __patroni_apt_packages:
-  - { name: "patroni",            state: "present" }
-  - { name: "python3-setuptools", state: "present" }
-  - { name: "python3-consul",     state: "present" }
-  - { name: "python3-etcd",       state: "present" }
-  - { name: "python3-kazoo",      state: "present" }
+  - { name: "patroni", state: "present" }
+
+# System packages for Ubuntu 24+ (pip-less installation)
+__patroni_system_apt_packages:
+  - { name: "jq", state: "present" }
+
+# DCS client packages (installed based on patroni_dcs variable)
+__patroni_dcs_packages:
+  etcd: "python3-etcd"
+  consul: "python3-consul" 
+  zookeeper: "python3-kazoo"
 
 __patroni_haproxy_packages:
   - { name: "haproxy", state: "present" }

@@ -21,6 +21,8 @@ patroni_pip_packages:
 
 # Default to empty, will be populated from vars files
 patroni_apt_packages: "{{ __patroni_apt_packages | default([]) }}"
+patroni_system_apt_packages: "{{ __patroni_system_apt_packages | default([]) }}"
+patroni_dcs_packages: "{{ __patroni_dcs_packages | default({}) }}"
 
 patroni_replication_username: replicator
 patroni_replication_password: repuserpasswd

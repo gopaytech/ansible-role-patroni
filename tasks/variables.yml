@@ -57,6 +57,16 @@
     patroni_apt_packages: "{{ __patroni_apt_packages | default([]) | list }}"
   when: patroni_apt_packages is not defined
 
+- name: Define patroni_system_apt_packages.
+  set_fact:
+    patroni_system_apt_packages: "{{ __patroni_system_apt_packages | default([]) | list }}"
+  when: patroni_system_apt_packages is not defined
+
+- name: Define patroni_dcs_packages.
+  set_fact:
+    patroni_dcs_packages: "{{ __patroni_dcs_packages | default({}) }}"
+  when: patroni_dcs_packages is not defined
+
 - name: Append haproxy to system packages if needed
   set_fact:
     patroni_system_packages: "{{ patroni_system_packages + __patroni_haproxy_packages | list }}"

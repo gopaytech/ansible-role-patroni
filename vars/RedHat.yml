@@ -33,3 +33,5 @@ __patroni_haproxy_packages:
 
 # Patroni packages not available via yum, use pip fallback
 __patroni_apt_packages: []
+__patroni_system_apt_packages: []
+__patroni_dcs_packages: {}
