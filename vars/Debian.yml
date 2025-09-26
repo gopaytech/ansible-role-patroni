@@ -25,9 +25,11 @@ __patroni_system_packages:
 
 # Patroni packages available via apt (Ubuntu 24+)
 __patroni_apt_packages:
-  - { name: "patroni",          state: "present" }
-  - { name: "python3-consul",   state: "present" }
-  - { name: "python3-etcd3",    state: "present" }
+  - { name: "patroni",            state: "present" }
+  - { name: "python3-setuptools", state: "present" }
+  - { name: "python3-consul",     state: "present" }
+  - { name: "python3-etcd",       state: "present" }
+  - { name: "python3-kazoo",      state: "present" }
 
 __patroni_haproxy_packages:
   - { name: "haproxy", state: "present" }

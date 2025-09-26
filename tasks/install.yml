@@ -19,17 +19,40 @@
   when: patroni_install_from_pip
 
 # Use system packages for Ubuntu 24.04+ (PEP 668 compliance)
-- name: Install patroni via apt packages (Ubuntu 24+)
+- name: Install patroni and setuptools via apt packages (Ubuntu 24+)
   package:
     name: "{{ item.name }}"
     state: "{{ item.state }}"
     update_cache: yes
   with_items:
-    - "{{ patroni_apt_packages }}"
+    - { name: "patroni", state: "present" }
+    - { name: "python3-setuptools", state: "present" }
   when: 
     - patroni_install_from_pip
     - ansible_distribution == 'Ubuntu'
     - ansible_distribution_version is version('24.04', '>=')
+
+- name: Install DCS-specific packages via apt (Ubuntu 24+)
+  package:
+    name: "python3-{{ patroni_dcs }}"
+    state: present
+    update_cache: yes
+  when: 
+    - patroni_install_from_pip
+    - ansible_distribution == 'Ubuntu'
+    - ansible_distribution_version is version('24.04', '>=')
+    - patroni_dcs in ['etcd', 'consul', 'kazoo']
+
+- name: Install zookeeper DCS package via apt (Ubuntu 24+)  
+  package:
+    name: "python3-kazoo"
+    state: present
+    update_cache: yes
+  when: 
+    - patroni_install_from_pip
+    - ansible_distribution == 'Ubuntu'
+    - ansible_distribution_version is version('24.04', '>=')
+    - patroni_dcs == 'zookeeper'
 
 # Use pip for older systems or when system packages aren't available
 - name: Install pip packages for patroni (pre-Ubuntu 24)
