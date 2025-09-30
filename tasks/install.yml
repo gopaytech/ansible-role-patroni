@@ -21,6 +21,33 @@
     - ansible_distribution == 'Ubuntu'
     - ansible_distribution_version is version('24.04', '>=')
 
+- name: Ensure PostgreSQL repository is configured (Ubuntu 24+ apt method)
+  block:
+    - name: Configure postgresql repository key
+      apt_key:
+        url: "{{ postgresql_apt_key_url }}"
+      when: postgresql_apt_key_url != ""
+
+    - name: Configure postgresql repository  
+      apt_repository:
+        repo: "{{ postgresql_apt_repo }}"
+        filename: "{{ postgresql_apt_filename }}"
+
+    - name: Ensure postgresql database-cluster manager package
+      package:
+        name: postgresql-common
+        update_cache: yes
+
+    - name: Disable initializing of a default postgresql cluster
+      replace:
+        path: /etc/postgresql-common/createcluster.conf
+        replace: create_main_cluster = false
+        regexp: ^#?create_main_cluster.*$
+  when: 
+    - patroni_install_from_pip
+    - ansible_distribution == 'Ubuntu'
+    - ansible_distribution_version is version('24.04', '>=')
+
 - name: Install PostgreSQL packages (Ubuntu 24+ apt method)
   package:
     name: "{{ item.name }}"
@@ -31,7 +58,8 @@
     - patroni_install_from_pip
     - ansible_distribution == 'Ubuntu'
     - ansible_distribution_version is version('24.04', '>=')
-    - not patroni_postgresql_exists
+  # Installs: postgresql-{{ patroni_postgresql_version }}, postgresql-client-{{ patroni_postgresql_version }},
+  #          postgresql-contrib-{{ patroni_postgresql_version }}, postgresql-server-dev-{{ patroni_postgresql_version }}
 
 - name: Install core patroni packages via apt (Ubuntu 24+)
   package:
