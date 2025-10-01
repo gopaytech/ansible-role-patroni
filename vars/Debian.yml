@@ -10,7 +10,7 @@ __patroni_postgresql_config_dir: "/var/lib/postgresql/{{ patroni_postgresql_vers
 __patroni_postgresql_bin_dir: "/usr/lib/postgresql/{{ patroni_postgresql_version }}/bin"
 __patroni_postgresql_pgpass: /var/lib/postgresql/.pgpass
 __patroni_bin_dir: /usr/local/bin
-__patroni_bin_dir_apt: /usr/bin
+__patroni_bin_dir_apt: /usr/bin  # Binary location when installed via APT (Ubuntu 24+)
 
 __patroni_postgresql_packages:
   - { name: "postgresql-{{ patroni_postgresql_version }}",            state: "present" }
@@ -18,6 +18,7 @@ __patroni_postgresql_packages:
   - { name: "postgresql-contrib-{{ patroni_postgresql_version }}",    state: "present" }
   - { name: "postgresql-server-dev-{{ patroni_postgresql_version }}", state: "present" }
 
+# Original system packages (used for Ubuntu < 24)
 __patroni_system_packages:
   - { name: "python3-psycopg2", state: "present" }
   - { name: "python3-pip",      state: "present" }
@@ -25,11 +26,9 @@ __patroni_system_packages:
 
 # Core patroni packages available via apt (Ubuntu 24+)
 __patroni_apt_packages:
-  - { name: "patroni", state: "present" }
-
-# System packages for Ubuntu 24+ (pip-less installation)
-__patroni_system_apt_packages:
-  - { name: "jq", state: "present" }
+  - { name: "patroni",          state: "present" }
+  - { name: "python3-psycopg2", state: "present" }
+  - { name: "jq",              state: "present" }
 
 # DCS client packages (installed based on patroni_dcs variable)
 __patroni_dcs_packages:
@@ -38,4 +37,5 @@ __patroni_dcs_packages:
   zookeeper: "python3-kazoo"
 
 __patroni_haproxy_packages:
+  - { name: "haproxy", state: "present" }
   - { name: "haproxy", state: "present" }
