@@ -104,6 +104,7 @@ patroni_exhibitor_port: "" #TODO
 patroni_exhibitor_poll_interval: 300 #TODO
 
 # https://patroni.readthedocs.io/en/latest/SETTINGS.html#bootstrap-configuration
+patroni_bootstrap_initialize: false
 patroni_bootstrap_dcs_ttl: 30
 patroni_bootstrap_dcs_loop_wait: 10
 patroni_bootstrap_dcs_retry_timeout: 10
