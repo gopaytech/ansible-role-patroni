@@ -40,6 +40,7 @@
     name:
       - patroni
       - python3-psycopg2
+      - "{{ patroni_dcs_packages[patroni_dcs] | default('') }}"
       - jq
     state: present
     update_cache: yes
