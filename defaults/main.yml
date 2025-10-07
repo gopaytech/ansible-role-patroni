@@ -111,6 +111,7 @@ patroni_exhibitor_poll_interval: 300 #TODO
 # Note: patroni_bootstrap_initialize defaults to false for pip installations (Ubuntu ≤22.04)
 # but will be automatically set to true for APT installations (Ubuntu ≥24.04) in variables.yml
 patroni_bootstrap_initialize: false
+patroni_use_new_auth_method: false
 patroni_bootstrap_dcs_ttl: 30
 patroni_bootstrap_dcs_loop_wait: 10
 patroni_bootstrap_dcs_retry_timeout: 10
