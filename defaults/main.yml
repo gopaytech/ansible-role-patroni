@@ -28,10 +28,13 @@ patroni_replication_username: replicator
 patroni_replication_password: repuserpasswd
 patroni_superuser_username: postgres
 patroni_superuser_password: supersecretpostgrespasswd
+patroni_rewind_username: rewinduser
+patroni_rewind_password: rewinduserpasswd
 
 patroni_postgresql_authentication:
   - { type: "superuser", username: "{{ patroni_superuser_username }}", password: "{{ patroni_superuser_password }}" }
   - { type: "replication", username: "{{ patroni_replication_username }}", password: "{{ patroni_replication_password }}" }
+  - { type: "rewind", username: "{{ patroni_rewind_username }}", password: "{{ patroni_rewind_password }}" }
 
 # https://patroni.readthedocs.io/en/latest/SETTINGS.html#global-universal
 patroni_scope: main
@@ -111,7 +114,6 @@ patroni_exhibitor_poll_interval: 300 #TODO
 # Note: patroni_bootstrap_initialize defaults to false for pip installations (Ubuntu ≤22.04)
 # but will be automatically set to true for APT installations (Ubuntu ≥24.04) in variables.yml
 patroni_bootstrap_initialize: false
-patroni_use_new_auth_method: false
 patroni_bootstrap_dcs_ttl: 30
 patroni_bootstrap_dcs_loop_wait: 10
 patroni_bootstrap_dcs_retry_timeout: 10

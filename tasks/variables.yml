@@ -130,9 +130,5 @@
     - ansible_distribution == 'Ubuntu'
     - ansible_distribution_version is version('24.04', '>=')
 
-- name: Set patroni_use_new_auth_method for Ubuntu 24.04+
-  set_fact:
-    patroni_use_new_auth_method: true
-  when:
-    - ansible_distribution == 'Ubuntu'
-    - ansible_distribution_version is version('24.04', '>=')
+# Keep authentication section for both Ubuntu 22 (pip) and Ubuntu 24 (APT)
+# Both installations need the authentication section with superuser, replication, and rewind users
