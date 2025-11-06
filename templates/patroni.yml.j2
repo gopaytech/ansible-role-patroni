@@ -78,13 +78,17 @@ bootstrap:
     {% if patroni_bootstrap_dcs_postgresql_parameters |d([], true) |length > 0 %}
       parameters:
       {% for guc in patroni_bootstrap_dcs_postgresql_parameters %}
+        {% if '"' in (guc.value | string) %}
+        {{ guc.option }}: '{{ guc.value }}'
+        {% else %}
         {{ guc.option }}: "{{ guc.value }}"
+        {% endif %}
       {% endfor %}
     {% endif %}
     {% if patroni_bootstrap_dcs_postgresql_recovery_conf |d([], true) |length > 0 %}
       recovery_conf:
       {% for item in patroni_bootstrap_dcs_postgresql_recovery_conf %}
-        {{ item.option }}: "{{ item.value }}"
+        {{ item.option }}: {{ item.value }}
       {% endfor %}
     {% endif %}
     {% if patroni_bootstrap_dcs_postgresql_pg_hba |d([], true) |length > 0 %}
@@ -162,7 +166,6 @@ postgresql:
   use_unix_socket: {{ patroni_postgresql_use_unix_socket |string |d(true, true) |replace(None, true) |lower }}
   listen: {{ patroni_postgresql_listen |d('0.0.0.0:5432', true) }}
   connect_address: {{ patroni_postgresql_connect_address |d(ansible_host + ':5432', true) }}
-
 {% if patroni_postgresql_data_dir |d(None, true) %}
   data_dir: {{ patroni_postgresql_data_dir }}
 {% endif %}
@@ -219,7 +222,11 @@ postgresql:
 {% if patroni_postgresql_parameters |d([], true) |length > 0 %}
   parameters:
   {% for guc in patroni_postgresql_parameters %}
+    {% if '"' in (guc.value | string) %}
+    {{ guc.option }}: '{{ guc.value }}'
+    {% else %}
     {{ guc.option }}: "{{ guc.value }}"
+    {% endif %}
   {% endfor %}
 {% endif %}
 {% if patroni_postgresql_pg_hba |d([], true) |length > 0 %}
@@ -260,4 +267,3 @@ tags:
     {% endif %}
   {% endfor %}
 {% endif %}
-
