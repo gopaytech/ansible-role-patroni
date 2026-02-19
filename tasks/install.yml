@@ -3,7 +3,7 @@
 - import_tasks: user.yml
   when: 
     - patroni_install_from_pip
-    - not (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('24.04', '=='))
+    - not (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('24.04', '>='))
 
 - import_tasks: postgresql.yml
   when: not patroni_postgresql_exists
@@ -20,7 +20,7 @@
     - "{{ patroni_system_packages }}"
   when: 
     - patroni_install_from_pip
-    - not (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('24.04', '=='))
+    - not (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('24.04', '>='))
 
 - name: Install pip packages for patroni
   pip:
@@ -32,18 +32,15 @@
     - "{{ patroni_pip_packages }}"
   when: 
     - patroni_install_from_pip
-    - not (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('24.04', '=='))
+    - not (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('24.04', '>='))
 
-# For Ubuntu 24.04, install Patroni and dependencies via APT (after other setup)
-- name: Install Patroni and dependencies via APT (Ubuntu 24.04)
+# For Ubuntu 24.04+, install Patroni and dependencies via APT (after other setup)
+- name: Install Patroni and dependencies via APT (Ubuntu 24.04+)
   package:
-    name:
-      - patroni
-      - python3-psycopg2
-      - "{{ patroni_dcs_packages[patroni_dcs] | default('') }}"
-      - jq
+    name: "{{ item }}"
     state: present
     update_cache: yes
+  with_items: "{{ (__patroni_apt_packages | map(attribute='name') | list) + ([patroni_dcs_packages[patroni_dcs]] if patroni_dcs_packages[patroni_dcs] else []) }}"
   when:
     - ansible_distribution == 'Ubuntu'
-    - ansible_distribution_version is version('24.04', '==')
+    - ansible_distribution_version is version('24.04', '>=')

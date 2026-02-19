@@ -28,6 +28,7 @@ __patroni_system_packages:
 __patroni_apt_packages:
   - { name: "patroni",          state: "present" }
   - { name: "python3-psycopg2", state: "present" }
+  - { name: "python3-setuptools", state: "present" }
   - { name: "jq",              state: "present" }
 
 # DCS client packages (installed based on patroni_dcs variable)
