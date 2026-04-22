@@ -54,6 +54,9 @@ restapi:
 {% include 'dcs/' + (patroni_dcs |d('etcd')) + '.yml.j2' %}
 
 bootstrap:
+{% if patroni_bootstrap_initialize |d(false, true) %}
+  initialize: {{ patroni_bootstrap_initialize |lower }}
+{% endif %}
   dcs:
     ttl: {{ patroni_bootstrap_dcs_ttl |d(30, true) |int }}
     loop_wait: {{ patroni_bootstrap_dcs_loop_wait |d(10, true) |int }}
@@ -75,7 +78,11 @@ bootstrap:
     {% if patroni_bootstrap_dcs_postgresql_parameters |d([], true) |length > 0 %}
       parameters:
       {% for guc in patroni_bootstrap_dcs_postgresql_parameters %}
-        {{ guc.option }}: {{ guc.value }}
+        {% if '"' in (guc.value | string) %}
+        {{ guc.option }}: '{{ guc.value }}'
+        {% else %}
+        {{ guc.option }}: "{{ guc.value }}"
+        {% endif %}
       {% endfor %}
     {% endif %}
     {% if patroni_bootstrap_dcs_postgresql_recovery_conf |d([], true) |length > 0 %}
@@ -215,7 +222,11 @@ postgresql:
 {% if patroni_postgresql_parameters |d([], true) |length > 0 %}
   parameters:
   {% for guc in patroni_postgresql_parameters %}
-    {{ guc.option }}: {{ guc.value }}
+    {% if '"' in (guc.value | string) %}
+    {{ guc.option }}: '{{ guc.value }}'
+    {% else %}
+    {{ guc.option }}: "{{ guc.value }}"
+    {% endif %}
   {% endfor %}
 {% endif %}
 {% if patroni_postgresql_pg_hba |d([], true) |length > 0 %}
