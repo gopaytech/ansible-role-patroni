@@ -54,6 +54,9 @@ restapi:
 {% include 'dcs/' + (patroni_dcs |d('etcd')) + '.yml.j2' %}
 
 bootstrap:
+{% if patroni_bootstrap_initialize |d(false, true) %}
+  initialize: {{ patroni_bootstrap_initialize |lower }}
+{% endif %}
   dcs:
     ttl: {{ patroni_bootstrap_dcs_ttl |d(30, true) |int }}
     loop_wait: {{ patroni_bootstrap_dcs_loop_wait |d(10, true) |int }}
