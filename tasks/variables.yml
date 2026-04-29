@@ -120,15 +120,3 @@
   set_fact:
     patroni_config_file: "config.yml"
   when: not patroni_install_from_pip
-
-# Set patroni_bootstrap_initialize to true only for Ubuntu 24.04 and later (APT installation)
-# Ubuntu 22.04 and earlier (pip installation) should use the default false value
-- name: Set patroni_bootstrap_initialize for Ubuntu 24.04+
-  set_fact:
-    patroni_bootstrap_initialize: true
-  when:
-    - ansible_distribution == 'Ubuntu'
-    - ansible_distribution_version is version('24.04', '>=')
-
-# Keep authentication section for both Ubuntu 22 (pip) and Ubuntu 24 (APT)
-# Both installations need the authentication section with superuser, replication, and rewind users
