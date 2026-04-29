@@ -1,4 +1,5 @@
 ---
+patroni_binary_version: "2.1.5"
 
 patroni_postgresql_version: 11
 patroni_postgresql_exists: false
@@ -17,7 +18,12 @@ patroni_exec_start_pre: "/bin/mkdir -m 2750 -p /var/run/postgresql/{{ patroni_po
 
 patroni_pip_packages:
   - { name: "setuptools",                 state: "latest",  umask: "0022", executable: "pip3" }
-  - { name: "patroni[{{ patroni_dcs }}]", state: "present", umask: "0022", executable: "pip3" }
+  - { name: "patroni[{{ patroni_dcs }}]=={{ patroni_binary_version }}", state: "present", umask: "0022", executable: "pip3" }
+
+# Default to empty, will be populated from vars files
+patroni_apt_packages: "{{ __patroni_apt_packages | default([]) }}"
+patroni_system_apt_packages: "{{ __patroni_system_apt_packages | default([]) }}"
+patroni_dcs_packages: "{{ __patroni_dcs_packages | default({}) }}"
 
 # Default to empty, will be populated from vars files
 patroni_apt_packages: "{{ __patroni_apt_packages | default([]) }}"
@@ -30,11 +36,6 @@ patroni_superuser_username: postgres
 patroni_superuser_password: supersecretpostgrespasswd
 patroni_rewind_username: rewinduser
 patroni_rewind_password: rewinduserpasswd
-
-patroni_postgresql_authentication:
-  - { type: "superuser", username: "{{ patroni_superuser_username }}", password: "{{ patroni_superuser_password }}" }
-  - { type: "replication", username: "{{ patroni_replication_username }}", password: "{{ patroni_replication_password }}" }
-  - { type: "rewind", username: "{{ patroni_rewind_username }}", password: "{{ patroni_rewind_password }}" }
 
 # https://patroni.readthedocs.io/en/latest/SETTINGS.html#global-universal
 patroni_scope: main
@@ -56,7 +57,7 @@ patroni_log_loggers:
 
 # https://patroni.readthedocs.io/en/latest/SETTINGS.html#rest-api
 patroni_restapi_port: 8008
-patroni_restapi_connect_address: "{{ ansible_host }}:{{ patroni_restapi_port }}"
+patroni_restapi_connect_address: "{{ ansible_default_ipv4.address }}:{{ patroni_restapi_port }}"
 patroni_restapi_listen: "0.0.0.0:{{ patroni_restapi_port }}"
 patroni_restapi_username: ""
 patroni_restapi_password: ""
@@ -111,9 +112,6 @@ patroni_exhibitor_port: "" #TODO
 patroni_exhibitor_poll_interval: 300 #TODO
 
 # https://patroni.readthedocs.io/en/latest/SETTINGS.html#bootstrap-configuration
-# Note: patroni_bootstrap_initialize defaults to false for pip installations (Ubuntu ≤22.04)
-# but will be automatically set to true for APT installations (Ubuntu ≥24.04) in variables.yml
-patroni_bootstrap_initialize: false
 patroni_bootstrap_dcs_ttl: 30
 patroni_bootstrap_dcs_loop_wait: 10
 patroni_bootstrap_dcs_retry_timeout: 10
@@ -185,12 +183,13 @@ patroni_bootstrap_users:
 
 patroni_postgresql_use_unix_socket: true
 patroni_postgresql_listen: 0.0.0.0:5432
-patroni_postgresql_connect_address: "{{ ansible_host }}:5432"
+patroni_postgresql_connect_address: "{{ ansible_default_ipv4.address }}:5432"
 
 # https://patroni.readthedocs.io/en/latest/SETTINGS.html#postgresql
 patroni_postgresql_authentication:
   - { type: "superuser",   username: "{{ patroni_superuser_username }}",   password: "{{ patroni_superuser_password }}" }
   - { type: "replication", username: "{{ patroni_replication_username }}", password: "{{ patroni_replication_password }}" }
+  - { type: "rewind", username: "{{ patroni_rewind_username }}", password: "{{ patroni_rewind_password }}" }
 
 patroni_postgresql_callbacks_dir: callbacks
 patroni_postgresql_callbacks:
