@@ -28,6 +28,13 @@ restapi:
     username: {{ patroni_restapi_username }}
     password: {{ patroni_restapi_password }}
 {% endif %}
+{% if patroni_restapi_allowlist |d([], true) |length > 0 %}
+  allowlist:
+  {% for entry in patroni_restapi_allowlist %}
+    - {{ entry }}
+  {% endfor %}
+  allowlist_include_members: {{ patroni_restapi_allowlist_include_members |d(true, true) |lower }}
+{% endif %}
 {% if patroni_restapi_certfile |d(None, true) and patroni_restapi_keyfile |d(None, true) %}
   certfile: {{ patroni_restapi_certfile }}
   keyfile: {{ patroni_restapi_keyfile }}
